@@ -23,7 +23,10 @@ public class PageController {
     }*/
 
     @RequestMapping(value = {"/challenge", "challenge/{name}"})
-    public String challengePath(@PathVariable Optional<String> name, Model model){
+    public String challengePath(
+            @PathVariable Optional<String> name,
+            Model model)
+    {
         if (name.isPresent()){
             model.addAttribute("name", name.get());
         }
@@ -31,5 +34,41 @@ public class PageController {
             model.addAttribute("name", "KB");
         }
         return "challenge";
+    }
+
+    @RequestMapping("/generator")
+    public String generate(
+            @RequestParam(value = "a", defaultValue = "0") Integer a,
+            @RequestParam(value = "b", defaultValue = "0") Integer b,
+            Model model)
+    {
+        model.addAttribute("a", a);
+        model.addAttribute("b", b);
+        model.addAttribute("kata", wordFactory(a,b));
+        return "viral_generator";
+    }
+
+    public String wordFactory(Integer a, Integer b){
+        String word = "h";
+        if ((a == 0 || a == 1) && (b == 0 || b == 1)){
+            return "hm";
+        }
+
+        else {
+            if (a == 0 || a == 1) {
+                word += "m";
+            }
+            else {
+                for (int i = 0; i < a; i++) {
+                    word += "m";
+                }
+            }
+
+            String wordOnce = word;
+            for (int i = 1 ; i < b ; i++){
+                word = word + " " + wordOnce;
+            }
+            return word;
+        }
     }
 }
